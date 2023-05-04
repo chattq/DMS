@@ -3,6 +3,8 @@ import {
   DealerManagementPage,
   ProvinceManagementPage,
 } from "@/pages";
+import { DistrictManagermentClone } from "@/pages/district-managermentClone/list";
+
 import { RouteItem } from "@/types";
 
 export const adminRoutes: RouteItem[] = [
@@ -26,6 +28,13 @@ export const adminRoutes: RouteItem[] = [
     subMenuTitle: "",
     mainMenuKey: "admin",
     getPageElement: () => <ProvinceManagementPage />,
+  },
+  {
+    key: "districtManagementClone",
+    path: "admin/districtClone",
+    subMenuTitle: "districtManagementClone",
+    mainMenuKey: "admin",
+    getPageElement: () => <DistrictManagermentClone />,
   },
   {
     key: "districtManagement",

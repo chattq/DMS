@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
-import "./province-management.scss";
 import { PageHeaderLayout } from "@layouts/page-header-layout";
 import { AdminContentLayout } from "@layouts/admin-content-layout";
 import { BaseGridView, ColumnOptions } from "@packages/ui/base-gridview";
@@ -15,10 +14,14 @@ import { useClientgateApi } from "@/packages/api";
 import { showErrorAtom } from "@/packages/store";
 import { toast } from "react-toastify";
 import { useAtomValue, useSetAtom } from "jotai";
-import { keywordAtom, selectedItemsAtom } from "../components/screen-atom";
-import { HeaderPart } from "./header-part";
 
-export const ProvinceManagementPage = () => {
+import { HeaderPart } from "./header-part";
+import {
+  keywordAtom,
+  selectedItemsAtom,
+} from "@/pages/province/components/screen-atom";
+
+export const DistrictManagermentClone = () => {
   const { t } = useI18n("Province");
   const api = useClientgateApi();
   const config = useConfiguration();
@@ -31,7 +34,7 @@ export const ProvinceManagementPage = () => {
   const { data, isLoading, refetch } = useQuery(
     ["provinces", keyword],
     () =>
-      api.getProvinces({
+      api.Mst_District_Search({
         KeyWord: keyword,
         FlagActive: FlagActiveEnum.All,
         Ft_PageIndex: 0,
@@ -105,30 +108,30 @@ export const ProvinceManagementPage = () => {
     throw new Error(resp.errorCode);
   };
 
-  const areaCodeFilter = useMemo(() => {
-    if (data?.isSuccess) {
-      // console.log("data Area", data);
-      // group item in data.DataList by AreaCode
-      // return an array of unique AreaCode
-      return data.DataList?.reduce((acc, cur) => {
-        const value = cur.AreaCode;
-        const existingItem = acc.find((item: any) => item.AreaCode === value);
-        if (!existingItem) {
-          acc.push({ AreaCode: value, count: 1 });
-        } else {
-          existingItem.count++;
-        }
-        return acc;
-      }, [] as { AreaCode: string; count: number }[])
-        .sort((a: any, b: any) => a.AreaCode.localeCompare(b.AreaCode))
-        .map((item: any) => ({
-          text: `${item.AreaCode} (${item.count})`,
-          value: item.AreaCode,
-        }));
-    } else {
-      return [];
-    }
-  }, [data]);
+  // const areaCodeFilter = useMemo(() => {
+  //   if (data?.isSuccess) {
+  //     // console.log("data Area", data);
+  //     // group item in data.DataList by AreaCode
+  //     // return an array of unique AreaCode
+  //     return data.DataList?.reduce((acc, cur) => {
+  //       const value = cur.AreaCode;
+  //       const existingItem = acc.find((item: any) => item.AreaCode === value);
+  //       if (!existingItem) {
+  //         acc.push({ AreaCode: value, count: 1 });
+  //       } else {
+  //         existingItem.count++;
+  //       }
+  //       return acc;
+  //     }, [] as { AreaCode: string; count: number }[])
+  //       .sort((a: any, b: any) => a.AreaCode.localeCompare(b.AreaCode))
+  //       .map((item: any) => ({
+  //         text: `${item.AreaCode} (${item.count})`,
+  //         value: item.AreaCode,
+  //       }));
+  //   } else {
+  //     return [];
+  //   }
+  // }, [data]);
 
   const flagActiveFilter = useMemo(() => {
     if (data?.isSuccess) {
@@ -152,8 +155,8 @@ export const ProvinceManagementPage = () => {
 
   const columns: ColumnOptions[] = [
     {
-      dataField: "ProvinceCode",
-      caption: t("Province Code"),
+      dataField: "DistrictCode",
+      caption: t("Mã quận/huyện"),
       editorType: "dxTextBox",
       visible: true,
       allowFiltering: false,
@@ -171,13 +174,13 @@ export const ProvinceManagementPage = () => {
       ],
     },
     {
-      dataField: "AreaCode",
-      caption: t("Area Code"),
+      dataField: "ProvinceCode",
+      caption: t("Mã tỉnh"),
       editorType: "dxSelectBox",
       visible: true,
-      headerFilter: {
-        dataSource: areaCodeFilter,
-      },
+      // headerFilter: {
+      //   dataSource: areaCodeFilter,
+      // },
       editorOptions: {
         dataSource: areasData?.DataList ?? [],
         displayExpr: "AreaCode",
@@ -185,8 +188,8 @@ export const ProvinceManagementPage = () => {
       },
     },
     {
-      dataField: "ProvinceName",
-      caption: t("Province Name"), // tên validate
+      dataField: "DistrictName",
+      caption: t("Tên quận huyện"), // tên validate
       defaultSortOrder: "asc",
       editorType: "dxTextBox",
       visible: true,
@@ -202,7 +205,7 @@ export const ProvinceManagementPage = () => {
     },
     {
       dataField: "FlagActive",
-      caption: t("Flag Active"),
+      caption: t("Trạng thái"),
       editorType: "dxSwitch",
       visible: true,
       alignment: "center",
@@ -298,7 +301,7 @@ export const ProvinceManagementPage = () => {
         <PageHeaderLayout>
           <PageHeaderLayout.Slot name={"Before"}>
             <div className="font-bold dx-font-m">
-              {t("Clone Province Management")}
+              {t("Clone District Management")}
             </div>
           </PageHeaderLayout.Slot>
           <PageHeaderLayout.Slot name={"Center"}>
