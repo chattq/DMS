@@ -18,18 +18,28 @@ import CustomStore from "devextreme/data/custom_store";
 import { PageSize } from "@packages/ui/page-size";
 import { PagerSummary } from "@packages/ui/pager-summary";
 import { PageNavigator } from "@packages/ui/page-navigator";
-import { ForwardedRef, forwardRef, useCallback, useReducer, useRef, useState } from "react";
+import {
+  ForwardedRef,
+  forwardRef,
+  useCallback,
+  useReducer,
+  useRef,
+  useState,
+} from "react";
 
-import './base-gridview.scss';
+import "./base-gridview.scss";
 import ScrollView from "devextreme-react/scroll-view";
 
 import CustomColumnChooser from "@packages/ui/column-toggler/custom-column-chooser";
 import { useWindowSize } from "@packages/hooks/useWindowSize";
 import { useI18n } from "@/i18n/useI18n";
-import { EditingStartEvent, EditorPreparingEvent } from "devextreme/ui/data_grid";
+import {
+  EditingStartEvent,
+  EditorPreparingEvent,
+} from "devextreme/ui/data_grid";
 import { logger } from "@/packages/logger";
-import {DeleteConfirmationBox, ExportConfirmBox} from "../modal";
-import {useVisibilityControl} from "@packages/hooks";
+import { DeleteConfirmationBox, ExportConfirmBox } from "../modal";
+import { useVisibilityControl } from "@packages/hooks";
 
 export interface ColumnOptions extends IColumnProps {
   editorType?: string;
@@ -43,7 +53,7 @@ interface GridViewProps {
   ref: ForwardedRef<any>;
   onReady?: (ref: any) => void;
   allowInlineEdit?: boolean;
-  inlineEditMode?: 'row' | 'popup' | 'form';
+  inlineEditMode?: "row" | "popup" | "form";
   onEditorPreparing?: (e: EditorPreparingEvent<any, any>) => void;
   onSaveRow?: (option: any) => void;
   isLoading?: boolean;
@@ -52,15 +62,22 @@ interface GridViewProps {
   onSelectionChanged: (rowKeys: string[]) => void;
 }
 
-const GridViewRaw = ({ ref, defaultPageSize = 100,
+const GridViewRaw = ({
+  ref,
+  defaultPageSize = 100,
   onEditorPreparing,
   onSaveRow,
   isLoading = false,
   keyExpr,
   onDeleteRows,
   onSelectionChanged,
-  dataSource, columns, onReady, inlineEditMode = 'form', allowInlineEdit = true }: GridViewProps) => {
-  const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
+  dataSource,
+  columns,
+  onReady,
+  inlineEditMode = "form",
+  allowInlineEdit = true,
+}: GridViewProps) => {
+  const [ignored, forceUpdate] = useReducer((x) => x + 1, 0);
   const [gridRef, setGridRef] = useState<any>(null);
   const [pageSize, setPageSize] = useState(defaultPageSize);
   const windowSize = useWindowSize();
@@ -77,25 +94,31 @@ const GridViewRaw = ({ ref, defaultPageSize = 100,
 
   const [visible, setVisible] = useState(false);
 
-  const [realColumns, setColumnsState] = useReducer((state: any, changes: any) => {
-    if (Object.keys(changes).length === 0) return state;
-    let newState = [...state];
-    changes.forEach((change: any) => {
-      let column = newState.find((c) => c.dataField === change.dataField);
-      Object.keys(change).forEach((key) => {
-        column[key] = change[key];
+  const [realColumns, setColumnsState] = useReducer(
+    (state: any, changes: any) => {
+      if (Object.keys(changes).length === 0) return state;
+      let newState = [...state];
+      changes.forEach((change: any) => {
+        let column = newState.find((c) => c.dataField === change.dataField);
+        Object.keys(change).forEach((key) => {
+          column[key] = change[key];
+        });
       });
-    });
-    return newState;
-  }, columns);
+      return newState;
+    },
+    columns
+  );
   const onHiding = useCallback(() => {
     setVisible(false);
   }, [setVisible]);
 
-  const onApply = useCallback((changes: any) => {
-    setColumnsState(changes);
-    setVisible(false);
-  }, [setColumnsState, setVisible]);
+  const onApply = useCallback(
+    (changes: any) => {
+      setColumnsState(changes);
+      setVisible(false);
+    },
+    [setColumnsState, setVisible]
+  );
   const onToolbarPreparing = useCallback((e: any) => {
     e.toolbarOptions.items.push({
       widget: "dxButton",
@@ -103,22 +126,22 @@ const GridViewRaw = ({ ref, defaultPageSize = 100,
       options: {
         icon: "/public/images/icons/setting.png",
         elementAttr: {
-          id: "myColumnChooser"
+          id: "myColumnChooser",
         },
-        onClick: () => setVisible(!visible)
-      }
+        onClick: () => setVisible(!visible),
+      },
     });
   }, []);
   const [pageIndex, setPageIndex] = useState(0);
   const [selectionKeys, setSelectionKeys] = useState<string[]>([]);
   const handleSelectionChanged = (e: any) => {
-    logger.debug('selection change:', e);
+    logger.debug("selection change:", e);
     setSelectionKeys(e.selectedRowKeys);
     onSelectionChanged?.(e.selectedRowKeys);
   };
   const [isEditing, setIsEditing] = useState(false);
   const handleEditingStart = (e: EditingStartEvent) => {
-    logger.debug('e:', e);
+    logger.debug("e:", e);
     setIsEditing(true);
   };
   const handleEditCancelled = () => {
@@ -126,7 +149,7 @@ const GridViewRaw = ({ ref, defaultPageSize = 100,
   };
 
   const handleSaved = (e: any) => {
-    logger.debug('saved event:', e);
+    logger.debug("saved event:", e);
     setIsEditing(false);
   };
   const handleAddingNewRow = () => {
@@ -141,49 +164,52 @@ const GridViewRaw = ({ ref, defaultPageSize = 100,
     setGridRef(ref);
   };
 
-  const onCancelDelete = () => {
-  };
+  const onCancelDelete = () => {};
   const onDelete = () => {
     onDeleteRows?.(selectionKeys);
   };
-  const controlConfirmBoxVisible = useVisibilityControl({defaultVisible: false});
+  const controlConfirmBoxVisible = useVisibilityControl({
+    defaultVisible: false,
+  });
   const handleConfirmDelete = () => {
     controlConfirmBoxVisible.open();
   };
-  
+
   return (
-    <div className={'base-gridview bg-white'}>
+    <div className={"base-gridview bg-white"}>
       <ScrollView showScrollbar={"always"}>
-        <LoadPanel visible={isLoading} position={{ of: '#gridContainer' }} />
+        <LoadPanel visible={isLoading} position={{ of: "#gridContainer" }} />
         <DataGrid
           keyExpr={keyExpr}
           errorRowEnabled={false}
-          scrolling={{ 
-            mode: 'standard', 
-            rowRenderingMode: 'virtual', 
-            showScrollbar: 'always', 
-            useNative: true, 
-            renderAsync: true 
+          scrolling={{
+            mode: "standard",
+            rowRenderingMode: "virtual",
+            showScrollbar: "always",
+            useNative: true,
+            renderAsync: true,
           }}
           cacheEnabled={false}
           id="gridContainer"
           height={`${windowSize.height - 100}px`}
-          width={'100%'}
-          ref={r => setRef(r)}
+          width={"100%"}
+          ref={(r) => setRef(r)}
           dataSource={dataSource}
-          noDataText={t('There is no data')}
+          noDataText={t("There is no data")}
           remoteOperations={false}
           columnAutoWidth={true}
           pager={{
-            visible: false
+            visible: false,
           }}
           repaintChangesOnly
           showBorders
-          onContentReady={() => { onReady?.(gridRef); }}
+          onContentReady={() => {
+            onReady?.(gridRef);
+          }}
           allowColumnResizing
           showColumnLines
           showRowLines
-          columnResizingMode={'widget'}
+          columnResizingMode={"widget"}
           allowColumnReordering
           onToolbarPreparing={onToolbarPreparing}
           onSelectionChanged={handleSelectionChanged}
@@ -197,36 +223,45 @@ const GridViewRaw = ({ ref, defaultPageSize = 100,
             e.cancel = true;
           }}
         >
-          <ColumnChooser enabled={true} allowSearch={true} mode={'select'} />
+          <ColumnChooser enabled={true} allowSearch={true} mode={"select"} />
           <ColumnFixing enabled={true} />
           <Paging pageSize={pageSize} enabled={true} pageIndex={pageIndex} />
           <HeaderFilter visible={!isEditing} dataSource={dataSource} />
           <Toolbar>
-            <ToolbarItem location='before'>
-              <Button text={t('Delete')}
+            <ToolbarItem location="before">
+              <Button
+                text={t("Delete")}
                 onClick={handleConfirmDelete}
                 visible={selectionKeys.length > 1}
-                stylingMode="contained" type='default' />
+                stylingMode="contained"
+                type="default"
+              />
             </ToolbarItem>
-            <ToolbarItem cssClass={'min-w-fit'} location={'after'}>
+            <ToolbarItem cssClass={"min-w-fit"} location={"after"}>
               <PageSize
-                title={t('Showing')}
+                title={t("Showing")}
                 onChangePageSize={onChangePageSize}
                 allowdPageSizes={[100, 200, 500, 1000]}
                 showAllOption={true}
-                showAllOptionText={t('Show All')}
+                showAllOptionText={t("Show All")}
                 defaultPageSize={pageSize}
               />
             </ToolbarItem>
-            <ToolbarItem location={'after'}>
+            <ToolbarItem location={"after"}>
               <PagerSummary
-                summaryTemplate={t('{0} - {1} of {2}')}
+                summaryTemplate={t("{0} - {1} of {2}")}
                 currentPage={pageIndex}
                 pageSize={pageSize}
-                totalCount={dataSource.hasOwnProperty('length') ? (dataSource as any[]).length : (gridRef ? gridRef.instance?.totalCount() : 0)}
+                totalCount={
+                  dataSource.hasOwnProperty("length")
+                    ? (dataSource as any[]).length
+                    : gridRef
+                    ? gridRef.instance?.totalCount()
+                    : 0
+                }
               />
             </ToolbarItem>
-            <ToolbarItem location={'after'}>
+            <ToolbarItem location={"after"}>
               <PageNavigator
                 totalPages={gridRef ? gridRef.instance?.pageCount() : 0}
                 currentPage={pageIndex}
@@ -234,14 +269,14 @@ const GridViewRaw = ({ ref, defaultPageSize = 100,
                 onPreviousPage={(pageIndex: number) => setPageIndex(pageIndex)}
               />
             </ToolbarItem>
-            <ToolbarItem location={'after'}>
+            <ToolbarItem location={"after"}>
               <CustomColumnChooser
-                title={t('Toggle Column')}
-                applyText={t('Apply')}
-                cancelText={t('Cancel')}
-                selectAllText={t('Select All')}
-                container={'#gridContainer'}
-                button={'#myColumnChooser'}
+                title={t("Toggle Column")}
+                applyText={t("Apply")}
+                cancelText={t("Cancel")}
+                selectAllText={t("Select All")}
+                container={"#gridContainer"}
+                button={"#myColumnChooser"}
                 visible={visible}
                 columns={columns}
                 onHiding={onHiding}
@@ -256,7 +291,11 @@ const GridViewRaw = ({ ref, defaultPageSize = 100,
             allowDeleting={true}
             allowAdding={true}
           >
-            <Texts confirmDeleteMessage={t('Are you sure?')} ok={t('OK')} cancel={t('Cancel')} />
+            <Texts
+              confirmDeleteMessage={t("Are you sure?")}
+              ok={t("OK")}
+              cancel={t("Cancel")}
+            />
           </Editing>
           <Column
             visible={allowInlineEdit}
@@ -268,18 +307,15 @@ const GridViewRaw = ({ ref, defaultPageSize = 100,
             <DxButton name="edit" />
             <DxButton name="delete" />
           </Column>
-          <Selection
-            mode="multiple"
-            selectAllMode="page"
-          />
+          <Selection mode="multiple" selectAllMode="page" />
           {realColumns.map((col: any) => (
             <Column key={col.dataField} {...col} allowSorting={!isEditing} />
           ))}
         </DataGrid>
       </ScrollView>
-      <DeleteConfirmationBox 
+      <DeleteConfirmationBox
         control={controlConfirmBoxVisible}
-        title={t('Delete')}
+        title={t("Delete")}
         onYesClick={onDelete}
         onNoClick={onCancelDelete}
       />
@@ -287,9 +323,9 @@ const GridViewRaw = ({ ref, defaultPageSize = 100,
   );
 };
 
-export const BaseGridView = forwardRef((props: Omit<GridViewProps, 'ref'>, ref: any) => {
-  return (
-    <GridViewRaw ref={ref} {...props} />
-  );
-});
-BaseGridView.displayName = 'BaseGridView';
+export const BaseGridView = forwardRef(
+  (props: Omit<GridViewProps, "ref">, ref: any) => {
+    return <GridViewRaw ref={ref} {...props} />;
+  }
+);
+BaseGridView.displayName = "BaseGridView";

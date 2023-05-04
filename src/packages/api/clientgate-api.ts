@@ -9,7 +9,7 @@ import { useDealerApi } from "./clientgate/dealer-api";
 import { useAreaApi } from "./clientgate/area-api";
 import { useMst_DealerType } from "./clientgate/Mst_DealerType-api";
 import { useMst_District } from "./clientgate/Mst_District-api";
-import {useUserApi} from "@packages/api/clientgate/user-api";
+import { useUserApi } from "@packages/api/clientgate/user-api";
 
 /**
  * Creates an axios instance for making requests to the ClientGate API.
@@ -46,7 +46,6 @@ export const createClientGateApiBase = (
   api.interceptors.response.use(
     function (response) {
       // with this API, it always falls to this case.
-      console.log("success case", response);
       const data = response.data;
       const result: any = {
         isSuccess: data.Data._strErrCode === "0" && !data.Data._excResult,
@@ -99,7 +98,8 @@ export const createClientGateApi = (
   const mstPortType = useMstPortTypeAPI(apiBase);
   const mstDealerType = useMst_DealerType(apiBase);
   const mstDistrict = useMst_District(apiBase);
-  const userApis = useUserApi(apiBase)
+  const userApis = useUserApi(apiBase);
+
   return {
     ...provinceApis,
     ...dealerApis,
@@ -108,7 +108,7 @@ export const createClientGateApi = (
     ...mstPortType,
     ...mstDealerType,
     ...mstDistrict,
-    ...userApis
+    ...userApis,
   };
 };
 

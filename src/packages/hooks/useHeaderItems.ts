@@ -7,31 +7,31 @@ export const useHeaderItems = () => {
   const menuBarItems = useMemo<MenuBarItem[]>(
     () => [
       {
-        text: t("sales"),
+        text: t("Sales"),
         path: `/sales`,
       },
       {
-        text: t("payment"),
+        text: t("Payment"),
         path: `/payment`,
       },
       {
-        text: t("contract"),
+        text: t("Contract"),
         path: `/contract`,
       },
       {
-        text: t("logistic"),
+        text: t("Logistic"),
         path: `/logistic`,
       },
       {
-        text: t("report"),
+        text: t("Report"),
         path: `/report`,
       },
       {
-        text: t("admin"),
+        text: t("Admin"),
         path: `/admin`,
       },
       {
-        text: t("clone"),
+        text: t("Clone"),
         path: `/clone`,
       },
     ],
