@@ -34,7 +34,7 @@ export const HeaderPart = ({
   };
 
   const handleExportExcel = async (selectedOnly: boolean) => {
-    const resp = await api.Mst_District_ExportExcel(
+    const resp = await api.Mst_Maintain_ExportExcel(
       selectedItems,
       keyword || ""
     );

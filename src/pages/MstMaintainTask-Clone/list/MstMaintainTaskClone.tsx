@@ -4,7 +4,12 @@ import { PageHeaderLayout } from "@layouts/page-header-layout";
 import { AdminContentLayout } from "@layouts/admin-content-layout";
 import { BaseGridView, ColumnOptions } from "@packages/ui/base-gridview";
 import { StatusButton } from "@/packages/ui/status-button";
-import { FlagActiveEnum, Province, SearchParam } from "@/packages/types";
+import {
+  FlagActiveEnum,
+  Mst_Maintain_Task,
+  Province,
+  SearchParam,
+} from "@/packages/types";
 import { useI18n } from "@/i18n/useI18n";
 import { useConfiguration } from "@/packages/hooks";
 import { logger } from "@/packages/logger";
@@ -21,8 +26,8 @@ import {
   selectedItemsAtom,
 } from "@/pages/province/components/screen-atom";
 
-export const DistrictManagermentClone = () => {
-  const { t } = useI18n("Province");
+export const MstMaintainTaskClone = () => {
+  const { t } = useI18n("MainTainTask");
   const api = useClientgateApi();
   const config = useConfiguration();
   let gridRef: any = useRef(null);
@@ -33,7 +38,7 @@ export const DistrictManagermentClone = () => {
   const { data, isLoading, refetch } = useQuery(
     ["provinces", keyword],
     () =>
-      api.Mst_District_Search({
+      api.Mst_Maintain_Search({
         KeyWord: keyword,
         FlagActive: FlagActiveEnum.All,
         Ft_PageIndex: 0,
@@ -52,9 +57,10 @@ export const DistrictManagermentClone = () => {
     }
   }, [data]);
 
-  const onCreate = async (data: Partial<Province>) => {
-    const resp = await api.Mst_District_Create({
+  const onCreate = async (data: Partial<Mst_Maintain_Task>) => {
+    const resp = await api.Mst_Maintain_Create({
       ...data,
+      MtnTkType: "DK",
       FlagActive: !!data.FlagActive ? (data.FlagActive ? "1" : "0") : "0",
     });
     if (resp.isSuccess) {
@@ -69,8 +75,12 @@ export const DistrictManagermentClone = () => {
     });
     throw new Error(resp.errorCode);
   };
-  const onUpdate = async (key: string, data: Partial<Province>, e: any) => {
-    const resp = await api.Mst_District_Update(key, data);
+  const onUpdate = async (
+    key: string,
+    data: Partial<Mst_Maintain_Task>,
+    e: any
+  ) => {
+    const resp = await api.Mst_Maintain_Update(key, data);
     if (resp.isSuccess) {
       toast.success(t("Update Successfully"));
       await refetch();
@@ -84,7 +94,8 @@ export const DistrictManagermentClone = () => {
     throw new Error(resp.errorCode);
   };
   const onDelete = async (key: string) => {
-    const resp = await api.Mst_District_Delete(key);
+    // đã chạy
+    const resp = await api.Mst_Maintain_Delete(key);
     if (resp.isSuccess) {
       toast.success(t("Delete Successfully"));
       await refetch();
@@ -120,8 +131,8 @@ export const DistrictManagermentClone = () => {
 
   const columns: ColumnOptions[] = [
     {
-      dataField: "DistrictCode",
-      caption: t("Mã quận/huyện"),
+      dataField: "MtnTkCode",
+      caption: t("Mã hạng mục"),
       editorType: "dxTextBox",
       visible: true,
       editorOptions: {
@@ -138,29 +149,13 @@ export const DistrictManagermentClone = () => {
       ],
     },
     {
-      dataField: "ProvinceCode",
-      caption: t("Mã tỉnh"),
+      dataField: "MtnTkName",
+      caption: t("Tên hạng mục"),
       editorType: "dxTextBox",
       visible: true,
       // headerFilter: {
       //   dataSource: areaCodeFilter,
       // },
-      editorOptions: {
-        placeholder: t("Input"),
-      },
-      validationRules: [
-        {
-          type: "required",
-        },
-      ],
-    },
-    {
-      dataField: "DistrictName",
-      caption: t("Tên quận huyện"), // tên validate
-      defaultSortOrder: "asc",
-      editorType: "dxTextBox",
-      visible: true,
-      allowFiltering: false,
       editorOptions: {
         placeholder: t("Input"),
       },
@@ -193,16 +188,18 @@ export const DistrictManagermentClone = () => {
   };
 
   const handleEditorPreparing = (e: EditorPreparingEvent<any, any>) => {
-    if (e.dataField === "ProvinceCode") {
-      e.editorOptions.readOnly = !e.row?.isNewRow;
-    } else if (e.dataField === "FlagActive") {
-      e.editorOptions.value = false;
-    } else if (e.dataField === "DistrictCode") {
-      e.editorOptions.readOnly = !e.row?.isNewRow;
-    }
+    // tạm thời chưa  dùng, để default
+    // if (e.dataField === "ProvinceCode") {
+    //   e.editorOptions.readOnly = !e.row?.isNewRow;
+    // } else if (e.dataField === "FlagActive") {
+    //   e.editorOptions.value = false;
+    // } else if (e.dataField === "DistrictCode") {
+    //   e.editorOptions.readOnly = !e.row?.isNewRow;
+    // }
   };
+  // đã chạy
   const handleDeleteRows = async (rows: string[]) => {
-    const resp = await api.Mst_District_Delete_Multiple(rows);
+    const resp = await api.Mst_Maintain_Delete_Multiple(rows);
     if (resp.isSuccess) {
       toast.success(t("Delete Successfully"));
       await refetch();
@@ -236,7 +233,7 @@ export const DistrictManagermentClone = () => {
   };
 
   const handleUploadFile = async (file: File, progressCallback?: Function) => {
-    const resp = await api.Mst_District_Upload(file);
+    const resp = await api.Mst_Maintain_Upload(file);
     if (resp.isSuccess) {
       toast.success(t("Upload Successfully"));
       await refetch();
@@ -249,7 +246,7 @@ export const DistrictManagermentClone = () => {
     }
   };
   const handleDownloadTemplate = async () => {
-    const resp = await api.Mst_District_ExportTemplate();
+    const resp = await api.Mst_Maintain_ExportTemplate();
     if (resp.isSuccess) {
       toast.success(t("Download Successfully"));
       window.location.href = resp.Data;
@@ -269,9 +266,7 @@ export const DistrictManagermentClone = () => {
       <AdminContentLayout.Slot name={"Header"}>
         <PageHeaderLayout>
           <PageHeaderLayout.Slot name={"Before"}>
-            <div className="font-bold dx-font-m">
-              {t("Clone District Management")}
-            </div>
+            <div className="font-bold dx-font-m">{t("Hạng mục công việc")}</div>
           </PageHeaderLayout.Slot>
           <PageHeaderLayout.Slot name={"Center"}>
             <HeaderPart
@@ -288,7 +283,7 @@ export const DistrictManagermentClone = () => {
           defaultPageSize={config.PAGE_SIZE}
           dataSource={data?.DataList ?? []}
           columns={columns}
-          keyExpr="DistrictCode"
+          keyExpr="MtnTkCode"
           allowSelection={true}
           allowInlineEdit={true}
           onReady={(ref) => (gridRef = ref)}

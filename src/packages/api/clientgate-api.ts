@@ -10,6 +10,7 @@ import { useAreaApi } from "./clientgate/area-api";
 import { useMst_DealerType } from "./clientgate/Mst_DealerType-api";
 import { useMst_District } from "./clientgate/Mst_District-api";
 import { useUserApi } from "@packages/api/clientgate/user-api";
+import { useMst_MaintainTask } from "./clientgate/Mst_MaintainTask-api";
 
 /**
  * Creates an axios instance for making requests to the ClientGate API.
@@ -99,6 +100,7 @@ export const createClientGateApi = (
   const mstDealerType = useMst_DealerType(apiBase);
   const mstDistrict = useMst_District(apiBase);
   const userApis = useUserApi(apiBase);
+  const mstMaintainTask = useMst_MaintainTask(apiBase);
 
   return {
     ...provinceApis,
@@ -109,6 +111,7 @@ export const createClientGateApi = (
     ...mstDealerType,
     ...mstDistrict,
     ...userApis,
+    ...mstMaintainTask,
   };
 };
 

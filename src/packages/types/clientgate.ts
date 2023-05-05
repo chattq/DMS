@@ -105,6 +105,14 @@ export interface Mst_District {
   LogLUDTimeUTC: string;
   LogLUBy: string;
 }
+export interface Mst_Maintain_Task {
+  MtnTkCode: string;
+  MtnTkType: string;
+  MtnTkName: string;
+  FlagActive: string;
+  LogLUDateTime: string;
+  LogLUBy: string;
+}
 
 export interface Mst_DealerType {
   DealerType: string;

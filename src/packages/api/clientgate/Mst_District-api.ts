@@ -53,12 +53,15 @@ export const useMst_District = (apiBase: AxiosInstance) => {
       key: string,
       port: Partial<Mst_District>
     ): Promise<ApiResponse<Mst_District>> => {
+      console.log(56, port);
+      console.log(57, key);
       return await apiBase.post<
         Partial<Mst_District>,
         ApiResponse<Mst_District>
       >("/MstDistrict/Update", {
         strJson: JSON.stringify({
-          PortCode: key,
+          ProvinceCode: key,
+          DistrictCode: key,
           ...port,
         }),
         ColsUpd: Object.keys(port),

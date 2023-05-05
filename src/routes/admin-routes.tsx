@@ -3,6 +3,7 @@ import {
   DealerManagementPage,
   ProvinceManagementPage,
 } from "@/pages";
+import { MstMaintainTaskClone } from "@/pages/MstMaintainTask-Clone/list";
 import { DistrictManagermentClone } from "@/pages/district-managermentClone/list";
 
 import { RouteItem } from "@/types";
@@ -35,6 +36,13 @@ export const adminRoutes: RouteItem[] = [
     subMenuTitle: "districtManagementClone",
     mainMenuKey: "admin",
     getPageElement: () => <DistrictManagermentClone />,
+  },
+  {
+    key: "MstMaintainTaskClone",
+    path: "admin/mainTainClone",
+    subMenuTitle: "Hạng mục công việc",
+    mainMenuKey: "admin",
+    getPageElement: () => <MstMaintainTaskClone />,
   },
   {
     key: "districtManagement",
