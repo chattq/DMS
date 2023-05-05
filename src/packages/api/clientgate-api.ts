@@ -13,6 +13,7 @@ import { useUserApi } from "@packages/api/clientgate/user-api";
 import { useMst_MaintainTask } from "./clientgate/Mst_MaintainTask-api";
 import { useMst_CarCancelType } from "./clientgate/Mst_Car_Cancel_Type-api";
 import { useMst_Plant } from "./clientgate/Mst_Plant-api";
+import { useMst_Dealer_Sales_Group } from "./clientgate/Mst_Dealer_Sales_Group-api";
 
 /**
  * Creates an axios instance for making requests to the ClientGate API.
@@ -105,6 +106,7 @@ export const createClientGateApi = (
   const mstMaintainTask = useMst_MaintainTask(apiBase);
   const mstCarCancel = useMst_CarCancelType(apiBase);
   const mstPlant = useMst_Plant(apiBase);
+  const mstDealerSalesGroup = useMst_Dealer_Sales_Group(apiBase);
 
   return {
     ...provinceApis,
@@ -118,6 +120,7 @@ export const createClientGateApi = (
     ...mstMaintainTask,
     ...mstCarCancel,
     ...mstPlant,
+    ...mstDealerSalesGroup,
   };
 };
 

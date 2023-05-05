@@ -113,6 +113,24 @@ export interface Mst_Maintain_Task {
   LogLUDateTime: string;
   LogLUBy: string;
 }
+export interface Mst_Dealer_Sales_Groups {
+  SalesGroupType: string;
+  SalesGroupTypeName: string;
+  FlagActive: string;
+  LogLUDateTime: string;
+  LogLUBy: string;
+}
+export interface Mst_Sales_Type {
+  SalesType: string;
+  SalesGroupType: string;
+  SalesTypeName: string;
+  SalesTypeNameVN: string;
+  SalesTypeDescription: string;
+  SalesTypeDescriptionVN: null;
+  FlagActive: string;
+  FlagActiveLogLUDTimeUTC: null;
+  LogLUBy: string;
+}
 export interface Mst_Plant {
   PlantCode: string;
   PlantName: string;

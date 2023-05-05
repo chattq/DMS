@@ -6,8 +6,7 @@ import { BaseGridView, ColumnOptions } from "@packages/ui/base-gridview";
 import { StatusButton } from "@/packages/ui/status-button";
 import {
   FlagActiveEnum,
-  Mst_CarCancelType,
-  Mst_Maintain_Task,
+  Mst_Dealer_Sales_Groups,
   Province,
   SearchParam,
 } from "@/packages/types";
@@ -27,8 +26,8 @@ import {
   selectedItemsAtom,
 } from "@/pages/province/components/screen-atom";
 
-export const MstCarCancelType = () => {
-  const { t } = useI18n("MstCarCancel");
+export const MstSalesType = () => {
+  const { t } = useI18n("MstDealerSalesGroup");
   const api = useClientgateApi();
   const config = useConfiguration();
   let gridRef: any = useRef(null);
@@ -39,7 +38,7 @@ export const MstCarCancelType = () => {
   const { data, isLoading, refetch } = useQuery(
     ["provinces", keyword],
     () =>
-      api.Mst_CarCancelType_Search({
+      api.Mst_Dealer_Sales_Group_Search({
         KeyWord: keyword,
         FlagActive: FlagActiveEnum.All,
         Ft_PageIndex: 0,
@@ -58,8 +57,8 @@ export const MstCarCancelType = () => {
     }
   }, [data]);
 
-  const onCreate = async (data: Partial<Mst_CarCancelType>) => {
-    const resp = await api.Mst_CarCancelType_Create({
+  const onCreate = async (data: Partial<Mst_Dealer_Sales_Groups>) => {
+    const resp = await api.Mst_Dealer_Sales_Group_Create({
       ...data,
       FlagActive: !!data.FlagActive ? (data.FlagActive ? "1" : "0") : "0",
     });
@@ -77,10 +76,10 @@ export const MstCarCancelType = () => {
   };
   const onUpdate = async (
     key: string,
-    data: Partial<Mst_Maintain_Task>,
+    data: Partial<Mst_Dealer_Sales_Groups>,
     e: any
   ) => {
-    const resp = await api.Mst_CarCancelType_Update(key, data);
+    const resp = await api.Mst_Dealer_Sales_Group_Update(key, data);
     if (resp.isSuccess) {
       toast.success(t("Update Successfully"));
       await refetch();
@@ -95,7 +94,7 @@ export const MstCarCancelType = () => {
   };
   const onDelete = async (key: string) => {
     // đã chạy
-    const resp = await api.Mst_CarCancelType_Delete(key);
+    const resp = await api.Mst_Dealer_Sales_Group_Delete(key);
     if (resp.isSuccess) {
       toast.success(t("Delete Successfully"));
       await refetch();
@@ -131,8 +130,8 @@ export const MstCarCancelType = () => {
 
   const columns: ColumnOptions[] = [
     {
-      dataField: "CarCancelType",
-      caption: t("CarCancelType"),
+      dataField: "SalesGroupType",
+      caption: t("SalesGroupType"),
       editorType: "dxTextBox",
       visible: true,
       editorOptions: {
@@ -149,8 +148,8 @@ export const MstCarCancelType = () => {
       ],
     },
     {
-      dataField: "CarCancelTypeName",
-      caption: t("CarCancelTypeName"),
+      dataField: "SalesGroupTypeName",
+      caption: t("SalesGroupTypeName"),
       editorType: "dxTextBox",
       visible: true,
       // headerFilter: {
@@ -189,18 +188,16 @@ export const MstCarCancelType = () => {
 
   const handleEditorPreparing = (e: EditorPreparingEvent<any, any>) => {
     // tạm thời chưa  dùng, để default
-    // if (e.dataField === "ProvinceCode") {
-    //   e.editorOptions.readOnly = !e.row?.isNewRow;
-    // } else if (e.dataField === "FlagActive") {
-    //   e.editorOptions.value = false;
-    // } else if (e.dataField === "DistrictCode") {
-    //   e.editorOptions.readOnly = !e.row?.isNewRow;
-    // }
+    if (e.dataField === "SalesGroupType") {
+      e.editorOptions.readOnly = !e.row?.isNewRow;
+    } else if (e.dataField === "FlagActive") {
+      e.editorOptions.value = false;
+    }
   };
   // đã chạy
   const handleDeleteRows = async (rows: string[]) => {
     // console.log(201, rows);
-    const resp = await api.Mst_CarCancelType_Delete_Multiple(rows);
+    const resp = await api.Mst_Dealer_Sales_Group_Delete_Multiple(rows);
     if (resp.isSuccess) {
       toast.success(t("Delete Successfully"));
       await refetch();
@@ -234,7 +231,7 @@ export const MstCarCancelType = () => {
   };
 
   const handleUploadFile = async (file: File, progressCallback?: Function) => {
-    const resp = await api.Mst_CarCancelType_Upload(file);
+    const resp = await api.Mst_Dealer_Sales_Group_Upload(file);
     if (resp.isSuccess) {
       toast.success(t("Upload Successfully"));
       await refetch();
@@ -247,7 +244,7 @@ export const MstCarCancelType = () => {
     }
   };
   const handleDownloadTemplate = async () => {
-    const resp = await api.Mst_CarCancelType_ExportTemplate();
+    const resp = await api.Mst_Dealer_Sales_Group_ExportTemplate();
     if (resp.isSuccess) {
       toast.success(t("Download Successfully"));
       window.location.href = resp.Data;
@@ -267,7 +264,9 @@ export const MstCarCancelType = () => {
       <AdminContentLayout.Slot name={"Header"}>
         <PageHeaderLayout>
           <PageHeaderLayout.Slot name={"Before"}>
-            <div className="font-bold dx-font-m">{t("Quản lý hủy xe")}</div>
+            <div className="font-bold dx-font-m">
+              {t("Nhóm loại hình bán lẻ")}
+            </div>
           </PageHeaderLayout.Slot>
           <PageHeaderLayout.Slot name={"Center"}>
             <HeaderPart
@@ -284,7 +283,7 @@ export const MstCarCancelType = () => {
           defaultPageSize={config.PAGE_SIZE}
           dataSource={data?.DataList ?? []}
           columns={columns}
-          keyExpr="CarCancelType"
+          keyExpr="SalesGroupType"
           allowSelection={true}
           allowInlineEdit={true}
           onReady={(ref) => (gridRef = ref)}

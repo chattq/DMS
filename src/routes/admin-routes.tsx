@@ -6,6 +6,8 @@ import {
 import { MstPlant } from "@/pages/Mst-Plant/list";
 import { MstCarCancelType } from "@/pages/MstCarCancelType/list";
 import { MstMaintainTaskClone } from "@/pages/MstMaintainTask-Clone/list";
+import { MstDealerSalesGroup } from "@/pages/Mst_Dealer_Sales_Group/list";
+import { MstSalesType } from "@/pages/Mst_Sales_Type/list";
 import { DistrictManagermentClone } from "@/pages/district-managermentClone/list";
 
 import { RouteItem } from "@/types";
@@ -54,18 +56,32 @@ export const adminRoutes: RouteItem[] = [
     getPageElement: () => <MstCarCancelType />,
   },
   {
-    key: "Mst_Dealer_SalesGroup",
-    path: "admin/MstSalesGroup",
-    subMenuTitle: "Nhóm loại hình bán lẻ",
-    mainMenuKey: "admin",
-    getPageElement: () => <MstCarCancelType />,
-  },
-  {
     key: "MstPlant",
     path: "admin/MstPlant",
     subMenuTitle: "Quản lý nhà máy",
     mainMenuKey: "admin",
     getPageElement: () => <MstPlant />,
+  },
+  {
+    key: "Mst_Dealer_SalesGroup",
+    path: "admin/MstSalesGroup",
+    subMenuTitle: "Nhóm loại hình bán lẻ",
+    mainMenuKey: "admin",
+    getPageElement: () => <MstDealerSalesGroup />,
+  },
+  {
+    key: "Mst_Sales_Type",
+    path: "admin/MstSalesType",
+    subMenuTitle: "Loại hình bán lẻ",
+    mainMenuKey: "admin",
+    getPageElement: () => <MstSalesType />,
+  },
+  {
+    key: "Rpt_PrincipleContract",
+    path: "admin/principleContract",
+    subMenuTitle: "Quản lý thông tin hợp đồng",
+    mainMenuKey: "admin",
+    getPageElement: () => <DealerManagementPage />,
   },
   {
     key: "districtManagement",
