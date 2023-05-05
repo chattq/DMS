@@ -3,6 +3,8 @@ import {
   DealerManagementPage,
   ProvinceManagementPage,
 } from "@/pages";
+import { MstPlant } from "@/pages/Mst-Plant/list";
+import { MstCarCancelType } from "@/pages/MstCarCancelType/list";
 import { MstMaintainTaskClone } from "@/pages/MstMaintainTask-Clone/list";
 import { DistrictManagermentClone } from "@/pages/district-managermentClone/list";
 
@@ -43,6 +45,27 @@ export const adminRoutes: RouteItem[] = [
     subMenuTitle: "Hạng mục công việc",
     mainMenuKey: "admin",
     getPageElement: () => <MstMaintainTaskClone />,
+  },
+  {
+    key: "MstCarCancelType",
+    path: "admin/MstCarCancelType",
+    subMenuTitle: "Quản lý hủy xe",
+    mainMenuKey: "admin",
+    getPageElement: () => <MstCarCancelType />,
+  },
+  {
+    key: "Mst_Dealer_SalesGroup",
+    path: "admin/MstSalesGroup",
+    subMenuTitle: "Nhóm loại hình bán lẻ",
+    mainMenuKey: "admin",
+    getPageElement: () => <MstCarCancelType />,
+  },
+  {
+    key: "MstPlant",
+    path: "admin/MstPlant",
+    subMenuTitle: "Quản lý nhà máy",
+    mainMenuKey: "admin",
+    getPageElement: () => <MstPlant />,
   },
   {
     key: "districtManagement",

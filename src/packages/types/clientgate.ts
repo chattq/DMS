@@ -113,6 +113,20 @@ export interface Mst_Maintain_Task {
   LogLUDateTime: string;
   LogLUBy: string;
 }
+export interface Mst_Plant {
+  PlantCode: string;
+  PlantName: string;
+  FlagActive: string;
+  LogLUDateTime: string;
+  LogLUBy: string;
+}
+export interface Mst_CarCancelType {
+  CarCancelType: string;
+  CarCancelTypeName: string;
+  LogLUDTimeUTC: string;
+  LogLUBy: string;
+  FlagActive: string;
+}
 
 export interface Mst_DealerType {
   DealerType: string;

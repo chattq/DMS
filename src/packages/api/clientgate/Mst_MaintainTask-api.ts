@@ -12,7 +12,7 @@ export const useMst_MaintainTask = (apiBase: AxiosInstance) => {
       params: SearchParam
     ): Promise<ApiResponse<Mst_Maintain_Task>> => {
       return await apiBase.post<SearchParam, ApiResponse<Mst_Maintain_Task>>(
-        "MstMaintainTask/Search",
+        "/MstMaintainTask/Search",
         {
           ...params,
         }
