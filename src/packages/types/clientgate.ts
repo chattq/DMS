@@ -131,6 +131,16 @@ export interface Mst_Sales_Type {
   FlagActiveLogLUDTimeUTC: null;
   LogLUBy: string;
 }
+export interface Rpt_Principle_Contract {
+  DealerCode: string;
+  PrincipleContractNo: string;
+  PrincipleContractDate: string;
+  BankInfo: string;
+  Representative: string;
+  JobTitle: string;
+  LogLUDateTime: string;
+  LogLUBy: string;
+}
 export interface Mst_Plant {
   PlantCode: string;
   PlantName: string;

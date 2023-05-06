@@ -8,6 +8,7 @@ import { MstCarCancelType } from "@/pages/MstCarCancelType/list";
 import { MstMaintainTaskClone } from "@/pages/MstMaintainTask-Clone/list";
 import { MstDealerSalesGroup } from "@/pages/Mst_Dealer_Sales_Group/list";
 import { MstSalesType } from "@/pages/Mst_Sales_Type/list";
+import { RptPrincipleContract } from "@/pages/Rpt_Principle_Contract/list";
 import { DistrictManagermentClone } from "@/pages/district-managermentClone/list";
 
 import { RouteItem } from "@/types";
@@ -81,7 +82,7 @@ export const adminRoutes: RouteItem[] = [
     path: "admin/principleContract",
     subMenuTitle: "Quản lý thông tin hợp đồng",
     mainMenuKey: "admin",
-    getPageElement: () => <DealerManagementPage />,
+    getPageElement: () => <RptPrincipleContract />,
   },
   {
     key: "districtManagement",

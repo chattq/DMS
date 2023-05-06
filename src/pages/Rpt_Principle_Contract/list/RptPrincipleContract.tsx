@@ -9,6 +9,7 @@ import {
   Mst_Dealer_Sales_Groups,
   Mst_Sales_Type,
   Province,
+  Rpt_Principle_Contract,
   SearchParam,
 } from "@/packages/types";
 import { useI18n } from "@/i18n/useI18n";
@@ -27,8 +28,8 @@ import {
   selectedItemsAtom,
 } from "@/pages/province/components/screen-atom";
 
-export const MstSalesType = () => {
-  const { t } = useI18n("MstDealerSalesGroup");
+export const RptPrincipleContract = () => {
+  const { t } = useI18n("RptPrincipleContract");
   const api = useClientgateApi();
   const config = useConfiguration();
   let gridRef: any = useRef(null);
@@ -39,7 +40,7 @@ export const MstSalesType = () => {
   const { data, isLoading, refetch } = useQuery(
     ["provinces", keyword],
     () =>
-      api.Mst_Sales_Type_Search({
+      api.Rpt_Principle_Contract_Search({
         KeyWord: keyword,
         FlagActive: FlagActiveEnum.All,
         Ft_PageIndex: 0,
@@ -60,10 +61,9 @@ export const MstSalesType = () => {
     }
   }, [data]);
 
-  const onCreate = async (data: Partial<Mst_Sales_Type>) => {
+  const onCreate = async (data: Partial<Rpt_Principle_Contract>) => {
     const resp = await api.Mst_Sales_Type_Create({
       ...data,
-      FlagActive: !!data.FlagActive ? (data.FlagActive ? "1" : "0") : "0",
     });
     if (resp.isSuccess) {
       toast.success(t("Create Successfully"));
@@ -79,12 +79,12 @@ export const MstSalesType = () => {
   };
   const onUpdate = async (
     key: string,
-    data: Partial<Mst_Sales_Type>,
+    data: Partial<Rpt_Principle_Contract>,
     e: any
   ) => {
-    const datakey = dataSearch.filter((item: any) => item.SalesType === key)[0];
-    // console.log(84, datakey);
-    const resp = await api.Mst_Sales_Type_Update(key, data, datakey);
+    // const datakey = dataSearch.filter((item: any) => item.SalesType === key)[0];
+    // // console.log(84, datakey);
+    const resp = await api.Rpt_Principle_Contract_Update(key, data);
     if (resp.isSuccess) {
       toast.success(t("Update Successfully"));
       await refetch();
@@ -112,30 +112,30 @@ export const MstSalesType = () => {
     throw new Error(resp.errorCode);
   };
 
-  const flagActiveFilter = useMemo(() => {
-    if (data?.isSuccess) {
-      return data.DataList?.reduce((acc, cur) => {
-        const value = cur.FlagActive;
-        const existingItem = acc.find((item) => item.FlagActive === value);
-        if (!existingItem) {
-          acc.push({ FlagActive: value, count: 1 });
-        } else {
-          existingItem.count++;
-        }
-        return acc;
-      }, [] as { FlagActive: string; count: number }[])
-        .sort((a, b) => a.FlagActive?.localeCompare(b.FlagActive))
-        .map((item) => ({
-          text: `${t(`FlagActive.${item.FlagActive}`)} (${item.count})`,
-          value: item.FlagActive,
-        }));
-    }
-  }, [data]);
+  // const flagActiveFilter = useMemo(() => {
+  //   if (data?.isSuccess) {
+  //     return data.DataList?.reduce((acc, cur) => {
+  //       const value = cur.FlagActive;
+  //       const existingItem = acc.find((item) => item.FlagActive === value);
+  //       if (!existingItem) {
+  //         acc.push({ FlagActive: value, count: 1 });
+  //       } else {
+  //         existingItem.count++;
+  //       }
+  //       return acc;
+  //     }, [] as { FlagActive: string; count: number }[])
+  //       .sort((a, b) => a.FlagActive?.localeCompare(b.FlagActive))
+  //       .map((item) => ({
+  //         text: `${t(`FlagActive.${item.FlagActive}`)} (${item.count})`,
+  //         value: item.FlagActive,
+  //       }));
+  //   }
+  // }, [data]);
 
   const columns: ColumnOptions[] = [
     {
-      dataField: "SalesType",
-      caption: t("SalesType"),
+      dataField: "DealerCode",
+      caption: t("DealerCode"),
       editorType: "dxTextBox",
       visible: true,
       editorOptions: {
@@ -152,8 +152,8 @@ export const MstSalesType = () => {
       ],
     },
     {
-      dataField: "SalesGroupType",
-      caption: t("SalesGroupType"),
+      dataField: "PrincipleContractNo",
+      caption: t("PrincipleContractNo"),
       editorType: "dxTextBox",
       visible: true,
       editorOptions: {
@@ -166,8 +166,8 @@ export const MstSalesType = () => {
       ],
     },
     {
-      dataField: "SalesTypeName",
-      caption: t("SalesTypeName"),
+      dataField: "PrincipleContractDate",
+      caption: t("PrincipleContractDate"),
       editorType: "dxTextBox",
       visible: true,
       editorOptions: {
@@ -180,8 +180,8 @@ export const MstSalesType = () => {
       ],
     },
     {
-      dataField: "SalesTypeNameVN",
-      caption: t("SalesTypeNameVN"),
+      dataField: "BankInfo",
+      caption: t("BankInfo"),
       editorType: "dxTextBox",
       visible: true,
       editorOptions: {
@@ -194,8 +194,8 @@ export const MstSalesType = () => {
       ],
     },
     {
-      dataField: "SalesTypeDescription",
-      caption: t("SalesTypeDescription"),
+      dataField: "Representative",
+      caption: t("Representative"),
       editorType: "dxTextBox",
       visible: true,
       editorOptions: {
@@ -208,19 +208,33 @@ export const MstSalesType = () => {
       ],
     },
     {
-      dataField: "FlagActive",
-      caption: t("Trạng thái"),
-      editorType: "dxSwitch",
+      dataField: "JobTitle",
+      caption: t("JobTitle"),
+      editorType: "dxTextBox",
       visible: true,
-      alignment: "center",
-      width: 120,
-      cellRender: ({ data }: any) => {
-        return <StatusButton isActive={data.FlagActive === "1"} />;
+      editorOptions: {
+        placeholder: t("Input"),
       },
-      headerFilter: {
-        dataSource: flagActiveFilter,
-      },
+      validationRules: [
+        {
+          type: "required",
+        },
+      ],
     },
+    // {
+    //   dataField: "FlagActive",
+    //   caption: t("Trạng thái"),
+    //   editorType: "dxSwitch",
+    //   visible: true,
+    //   alignment: "center",
+    //   width: 120,
+    //   cellRender: ({ data }: any) => {
+    //     return <StatusButton isActive={data.FlagActive === "1"} />;
+    //   },
+    //   headerFilter: {
+    //     dataSource: flagActiveFilter,
+    //   },
+    // },
   ];
 
   const handleAddNew = () => {
@@ -231,12 +245,10 @@ export const MstSalesType = () => {
 
   const handleEditorPreparing = (e: EditorPreparingEvent<any, any>) => {
     // tạm thời chưa  dùng, để default
-    if (e.dataField === "SalesType") {
+    if (e.dataField === "DealerCode") {
       e.editorOptions.readOnly = !e.row?.isNewRow;
     } else if (e.dataField === "FlagActive") {
       e.editorOptions.value = false;
-    } else if (e.dataField === "SalesGroupType") {
-      e.editorOptions.readOnly = !e.row?.isNewRow;
     }
   };
   // đã chạy
@@ -328,7 +340,7 @@ export const MstSalesType = () => {
           defaultPageSize={config.PAGE_SIZE}
           dataSource={data?.DataList ?? []}
           columns={columns}
-          keyExpr="SalesType"
+          keyExpr="DealerCode"
           allowSelection={true}
           allowInlineEdit={true}
           onReady={(ref) => (gridRef = ref)}
