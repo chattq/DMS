@@ -34,7 +34,7 @@ export const HeaderPart = ({
   };
 
   const handleExportExcel = async (selectedOnly: boolean) => {
-    const resp = await api.Rpt_Principle_Contract_ExportExcel(
+    const resp = await api.Mst_Dealer_Sales_Group_ExportExcel(
       selectedItems,
       keyword || ""
     );

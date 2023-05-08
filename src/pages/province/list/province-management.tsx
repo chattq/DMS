@@ -28,6 +28,7 @@ export const ProvinceManagementPage = () => {
   const showError = useSetAtom(showErrorAtom);
   const setSelectedItems = useSetAtom(selectedItemsAtom);
   // load all data
+
   const { data, isLoading, refetch } = useQuery(
     ["provinces", keyword],
     () =>
@@ -111,6 +112,8 @@ export const ProvinceManagementPage = () => {
       // group item in data.DataList by AreaCode
       // return an array of unique AreaCode
       return data.DataList?.reduce((acc, cur) => {
+        // console.log(115, acc);
+        // console.log(116, cur);
         const value = cur.AreaCode;
         const existingItem = acc.find((item: any) => item.AreaCode === value);
         if (!existingItem) {

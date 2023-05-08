@@ -62,7 +62,8 @@ export const RptPrincipleContract = () => {
   }, [data]);
 
   const onCreate = async (data: Partial<Rpt_Principle_Contract>) => {
-    const resp = await api.Mst_Sales_Type_Create({
+    // console.log(65, data);
+    const resp = await api.Rpt_Principle_Contract_Create({
       ...data,
     });
     if (resp.isSuccess) {
@@ -82,8 +83,6 @@ export const RptPrincipleContract = () => {
     data: Partial<Rpt_Principle_Contract>,
     e: any
   ) => {
-    // const datakey = dataSearch.filter((item: any) => item.SalesType === key)[0];
-    // // console.log(84, datakey);
     const resp = await api.Rpt_Principle_Contract_Update(key, data);
     if (resp.isSuccess) {
       toast.success(t("Update Successfully"));
@@ -98,7 +97,7 @@ export const RptPrincipleContract = () => {
     throw new Error(resp.errorCode);
   };
   const onDelete = async (key: string) => {
-    const resp = await api.Mst_Sales_Type_Delete(key);
+    const resp = await api.Rpt_Principle_Contract_Delete(key);
     if (resp.isSuccess) {
       toast.success(t("Delete Successfully"));
       await refetch();
@@ -168,25 +167,12 @@ export const RptPrincipleContract = () => {
     {
       dataField: "PrincipleContractDate",
       caption: t("PrincipleContractDate"),
-      editorType: "dxTextBox",
-      visible: true,
+      editorType: "dxDateBox",
+      format: "yyyy/MM/dd",
       editorOptions: {
-        placeholder: t("Input"),
+        type: "date",
       },
-      validationRules: [
-        {
-          type: "required",
-        },
-      ],
-    },
-    {
-      dataField: "BankInfo",
-      caption: t("BankInfo"),
-      editorType: "dxTextBox",
       visible: true,
-      editorOptions: {
-        placeholder: t("Input"),
-      },
       validationRules: [
         {
           type: "required",
@@ -221,6 +207,21 @@ export const RptPrincipleContract = () => {
         },
       ],
     },
+    {
+      dataField: "BankInfo",
+      caption: t("BankInfo"),
+      editorType: "dxTextBox",
+      visible: true,
+      editorOptions: {
+        placeholder: t("Input"),
+      },
+      validationRules: [
+        {
+          type: "required",
+        },
+      ],
+    },
+
     // {
     //   dataField: "FlagActive",
     //   caption: t("Trạng thái"),
@@ -253,8 +254,7 @@ export const RptPrincipleContract = () => {
   };
   // đã chạy
   const handleDeleteRows = async (rows: string[]) => {
-    // console.log(201, rows);
-    const resp = await api.Mst_Sales_Type_Delete_Multiple(rows);
+    const resp = await api.Rpt_Principle_Contract_Delete_Multiple(rows);
     if (resp.isSuccess) {
       toast.success(t("Delete Successfully"));
       await refetch();
@@ -288,7 +288,7 @@ export const RptPrincipleContract = () => {
   };
 
   const handleUploadFile = async (file: File, progressCallback?: Function) => {
-    const resp = await api.Mst_Sales_Type_Upload(file);
+    const resp = await api.Rpt_Principle_Contract_Upload(file);
     if (resp.isSuccess) {
       toast.success(t("Upload Successfully"));
       await refetch();
@@ -301,7 +301,7 @@ export const RptPrincipleContract = () => {
     }
   };
   const handleDownloadTemplate = async () => {
-    const resp = await api.Mst_Sales_Type_ExportTemplate();
+    const resp = await api.Rpt_Principle_Contract_ExportTemplate();
     if (resp.isSuccess) {
       toast.success(t("Download Successfully"));
       window.location.href = resp.Data;
@@ -321,9 +321,7 @@ export const RptPrincipleContract = () => {
       <AdminContentLayout.Slot name={"Header"}>
         <PageHeaderLayout>
           <PageHeaderLayout.Slot name={"Before"}>
-            <div className="font-bold dx-font-m">
-              {t("Quản lý loại hình bán lẻ")}
-            </div>
+            <div className="font-bold dx-font-m">{t("Quản lý hợp đồng")}</div>
           </PageHeaderLayout.Slot>
           <PageHeaderLayout.Slot name={"Center"}>
             <HeaderPart

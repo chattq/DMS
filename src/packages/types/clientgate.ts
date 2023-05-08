@@ -105,6 +105,29 @@ export interface Mst_District {
   LogLUDTimeUTC: string;
   LogLUBy: string;
 }
+export interface Mst_Insurance {
+  InsCompanyCode: string;
+  InsTypeCode: string;
+  EffectiveDate: string;
+  InsTypeName: string;
+  Rate: number;
+  FlagActive: string;
+  Remark: string;
+  CreatedDate: string;
+  CreatedBy: string;
+  LogLUDateTime: string;
+  LogLUBy: string;
+}
+export interface Mst_Delay_Transports {
+  StorageCode: string;
+  StorageName: string;
+  DealerCode: string;
+  DealerName: string;
+  DelayTransport: string;
+  FlagActive: string;
+  LogLUDateTime: string;
+  LogLUBy: string;
+}
 export interface Mst_Maintain_Task {
   MtnTkCode: string;
   MtnTkType: string;
@@ -129,6 +152,39 @@ export interface Mst_Sales_Type {
   SalesTypeDescriptionVN: null;
   FlagActive: string;
   FlagActiveLogLUDTimeUTC: null;
+  LogLUBy: string;
+}
+export interface Mst_Storage_Area_Rate {
+  StorageCode: string;
+  ModelCode: string;
+  ModelName: string;
+  SpecCode: string;
+  SpecDescription: string;
+  ColorExtCode: string;
+  ColorExtNameVN: string;
+  MBTVal: number;
+  MBVal: number;
+  MTVal: number;
+  MNVal: number;
+  LogLUDateTime: string;
+  LogLUBy: string;
+}
+export interface Mst_Inventory_Cost {
+  StorageCode: string;
+  StorageName: string;
+  CostTypeCode: string;
+  CostTypeName: string;
+  UnitPrice: number;
+  FlagActive: string;
+  LogLUDTimeUTC: string;
+  LogLUBy: string;
+}
+export interface Mst_Unit_Price_AVN {
+  AVNCode: string;
+  EffDateTime: string;
+  UnitPriceAVN: number;
+  FlagActive: string;
+  LogLUDateTime: string;
   LogLUBy: string;
 }
 export interface Rpt_Principle_Contract {

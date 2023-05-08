@@ -4,7 +4,12 @@ import { PageHeaderLayout } from "@layouts/page-header-layout";
 import { AdminContentLayout } from "@layouts/admin-content-layout";
 import { BaseGridView, ColumnOptions } from "@packages/ui/base-gridview";
 import { StatusButton } from "@/packages/ui/status-button";
-import { FlagActiveEnum, Province, SearchParam } from "@/packages/types";
+import {
+  FlagActiveEnum,
+  Mst_Dealer_Sales_Groups,
+  Province,
+  SearchParam,
+} from "@/packages/types";
 import { useI18n } from "@/i18n/useI18n";
 import { useConfiguration } from "@/packages/hooks";
 import { logger } from "@/packages/logger";
@@ -21,8 +26,8 @@ import {
   selectedItemsAtom,
 } from "@/pages/province/components/screen-atom";
 
-export const DistrictManagermentClone = () => {
-  const { t } = useI18n("Province");
+export const MstDelayTransports = () => {
+  const { t } = useI18n("MstDelayTransports");
   const api = useClientgateApi();
   const config = useConfiguration();
   let gridRef: any = useRef(null);
@@ -31,9 +36,9 @@ export const DistrictManagermentClone = () => {
   const showError = useSetAtom(showErrorAtom);
   const setSelectedItems = useSetAtom(selectedItemsAtom);
   const { data, isLoading, refetch } = useQuery(
-    ["provinces", keyword],
+    ["MstDelayTransports", keyword],
     () =>
-      api.Mst_District_Search({
+      api.Mst_Delay_Transports_Search({
         KeyWord: keyword,
         FlagActive: FlagActiveEnum.All,
         Ft_PageIndex: 0,
@@ -52,8 +57,8 @@ export const DistrictManagermentClone = () => {
     }
   }, [data]);
 
-  const onCreate = async (data: Partial<Province>) => {
-    const resp = await api.Mst_District_Create({
+  const onCreate = async (data: Partial<Mst_Dealer_Sales_Groups>) => {
+    const resp = await api.Mst_Delay_Transports_Create({
       ...data,
       FlagActive: !!data.FlagActive ? (data.FlagActive ? "1" : "0") : "0",
     });
@@ -69,8 +74,12 @@ export const DistrictManagermentClone = () => {
     });
     throw new Error(resp.errorCode);
   };
-  const onUpdate = async (key: string, data: Partial<Province>, e: any) => {
-    const resp = await api.Mst_District_Update(key, data);
+  const onUpdate = async (
+    key: string,
+    data: Partial<Mst_Dealer_Sales_Groups>,
+    e: any
+  ) => {
+    const resp = await api.Mst_Dealer_Sales_Group_Update(key, data);
     if (resp.isSuccess) {
       toast.success(t("Update Successfully"));
       await refetch();
@@ -84,7 +93,8 @@ export const DistrictManagermentClone = () => {
     throw new Error(resp.errorCode);
   };
   const onDelete = async (key: string) => {
-    const resp = await api.Mst_District_Delete(key);
+    // đã chạy
+    const resp = await api.Mst_Delay_Transports_Delete(key);
     if (resp.isSuccess) {
       toast.success(t("Delete Successfully"));
       await refetch();
@@ -120,26 +130,8 @@ export const DistrictManagermentClone = () => {
 
   const columns: ColumnOptions[] = [
     {
-      dataField: "DistrictCode",
-      caption: t("Mã quận/huyện"),
-      editorType: "dxTextBox",
-      visible: true,
-      editorOptions: {
-        placeholder: t("Input"),
-      },
-      validationRules: [
-        {
-          type: "required",
-        },
-        {
-          type: "pattern",
-          pattern: /[a-zA-Z0-9]/,
-        },
-      ],
-    },
-    {
-      dataField: "ProvinceCode",
-      caption: t("Mã tỉnh"),
+      dataField: "StorageCode",
+      caption: t("StorageCode"),
       editorType: "dxTextBox",
       visible: true,
       editorOptions: {
@@ -152,12 +144,64 @@ export const DistrictManagermentClone = () => {
       ],
     },
     {
-      dataField: "DistrictName",
-      caption: t("Tên quận huyện"), // tên validate
-      defaultSortOrder: "asc",
+      dataField: "StorageName",
+      caption: t("StorageName"),
       editorType: "dxTextBox",
       visible: true,
-      allowFiltering: false,
+      // headerFilter: {
+      //   dataSource: areaCodeFilter,
+      // },
+      editorOptions: {
+        placeholder: t("Input"),
+      },
+      validationRules: [
+        {
+          type: "required",
+        },
+      ],
+    },
+    {
+      dataField: "DealerCode",
+      caption: t("DealerCode"),
+      editorType: "dxTextBox",
+      visible: true,
+      // headerFilter: {
+      //   dataSource: areaCodeFilter,
+      // },
+      editorOptions: {
+        placeholder: t("Input"),
+      },
+      validationRules: [
+        {
+          type: "required",
+        },
+      ],
+    },
+    {
+      dataField: "DealerName",
+      caption: t("DealerName"),
+      editorType: "dxTextBox",
+      visible: true,
+      // headerFilter: {
+      //   dataSource: areaCodeFilter,
+      // },
+      editorOptions: {
+        placeholder: t("Input"),
+      },
+      validationRules: [
+        {
+          type: "required",
+        },
+      ],
+    },
+    {
+      dataField: "DelayTransport",
+      caption: t("DelayTransport"),
+      editorType: "dxTextBox",
+      visible: true,
+      // headerFilter: {
+      //   dataSource: areaCodeFilter,
+      // },
       editorOptions: {
         placeholder: t("Input"),
       },
@@ -190,16 +234,17 @@ export const DistrictManagermentClone = () => {
   };
 
   const handleEditorPreparing = (e: EditorPreparingEvent<any, any>) => {
-    if (e.dataField === "ProvinceCode") {
+    // tạm thời chưa  dùng, để default
+    if (e.dataField === "SalesGroupType") {
       e.editorOptions.readOnly = !e.row?.isNewRow;
     } else if (e.dataField === "FlagActive") {
       e.editorOptions.value = false;
-    } else if (e.dataField === "DistrictCode") {
-      e.editorOptions.readOnly = !e.row?.isNewRow;
     }
   };
+  // đã chạy
   const handleDeleteRows = async (rows: string[]) => {
-    const resp = await api.Mst_District_Delete_Multiple(rows);
+    // console.log(201, rows);
+    const resp = await api.Mst_Dealer_Sales_Group_Delete_Multiple(rows);
     if (resp.isSuccess) {
       toast.success(t("Delete Successfully"));
       await refetch();
@@ -233,7 +278,7 @@ export const DistrictManagermentClone = () => {
   };
 
   const handleUploadFile = async (file: File, progressCallback?: Function) => {
-    const resp = await api.Mst_District_Upload(file);
+    const resp = await api.Mst_Dealer_Sales_Group_Upload(file);
     if (resp.isSuccess) {
       toast.success(t("Upload Successfully"));
       await refetch();
@@ -246,7 +291,7 @@ export const DistrictManagermentClone = () => {
     }
   };
   const handleDownloadTemplate = async () => {
-    const resp = await api.Mst_District_ExportTemplate();
+    const resp = await api.Mst_Dealer_Sales_Group_ExportTemplate();
     if (resp.isSuccess) {
       toast.success(t("Download Successfully"));
       window.location.href = resp.Data;
@@ -267,7 +312,7 @@ export const DistrictManagermentClone = () => {
         <PageHeaderLayout>
           <PageHeaderLayout.Slot name={"Before"}>
             <div className="font-bold dx-font-m">
-              {t("Clone District Management")}
+              {t("Quản lý hạn mức độ trễ vận tải")}
             </div>
           </PageHeaderLayout.Slot>
           <PageHeaderLayout.Slot name={"Center"}>
@@ -285,7 +330,7 @@ export const DistrictManagermentClone = () => {
           defaultPageSize={config.PAGE_SIZE}
           dataSource={data?.DataList ?? []}
           columns={columns}
-          keyExpr="DistrictCode"
+          keyExpr="StorageCode"
           allowSelection={true}
           allowInlineEdit={true}
           onReady={(ref) => (gridRef = ref)}

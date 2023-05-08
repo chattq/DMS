@@ -16,6 +16,11 @@ import { useMst_Plant } from "./clientgate/Mst_Plant-api";
 import { useMst_Dealer_Sales_Group } from "./clientgate/Mst_Dealer_Sales_Group-api";
 import { useMstSalesType } from "./clientgate/Mst_Sales_Type-api";
 import { useRptPrincipleContract } from "./clientgate/Rpt_Principle_Contract-apis";
+import { useMst_Insurance } from "./clientgate/Mst_Insurance-api";
+import { useMst_Delay_Transports } from "./clientgate/Mst_Delay_Transports-api";
+import { useMstStorageAreaRate } from "./clientgate/Mst_Storage_Area_Rate-api";
+import { useMstUnitPriceAVN } from "./clientgate/Mst_Unit_Price_AVN-api";
+import { useMstInventoryCost } from "./clientgate/Mst_Inventory_Cost-api";
 
 /**
  * Creates an axios instance for making requests to the ClientGate API.
@@ -111,6 +116,11 @@ export const createClientGateApi = (
   const mstDealerSalesGroup = useMst_Dealer_Sales_Group(apiBase);
   const mstSalesType = useMstSalesType(apiBase);
   const rptPrincipleContract = useRptPrincipleContract(apiBase);
+  const mstInsurance = useMst_Insurance(apiBase);
+  const mstDelayTransports = useMst_Delay_Transports(apiBase);
+  const mstStorageAreaRate = useMstStorageAreaRate(apiBase);
+  const mstUnitPriceAVN = useMstUnitPriceAVN(apiBase);
+  const mstInventoryCost = useMstInventoryCost(apiBase);
 
   return {
     ...provinceApis,
@@ -127,6 +137,11 @@ export const createClientGateApi = (
     ...mstDealerSalesGroup,
     ...mstSalesType,
     ...rptPrincipleContract,
+    ...mstInsurance,
+    ...mstDelayTransports,
+    ...mstStorageAreaRate,
+    ...mstUnitPriceAVN,
+    ...mstInventoryCost,
   };
 };
 

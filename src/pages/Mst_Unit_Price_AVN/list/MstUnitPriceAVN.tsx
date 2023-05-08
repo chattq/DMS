@@ -4,7 +4,14 @@ import { PageHeaderLayout } from "@layouts/page-header-layout";
 import { AdminContentLayout } from "@layouts/admin-content-layout";
 import { BaseGridView, ColumnOptions } from "@packages/ui/base-gridview";
 import { StatusButton } from "@/packages/ui/status-button";
-import { FlagActiveEnum, Province, SearchParam } from "@/packages/types";
+import {
+  FlagActiveEnum,
+  Mst_Dealer_Sales_Groups,
+  Mst_Sales_Type,
+  Mst_Unit_Price_AVN,
+  Province,
+  SearchParam,
+} from "@/packages/types";
 import { useI18n } from "@/i18n/useI18n";
 import { useConfiguration } from "@/packages/hooks";
 import { logger } from "@/packages/logger";
@@ -21,19 +28,19 @@ import {
   selectedItemsAtom,
 } from "@/pages/province/components/screen-atom";
 
-export const DistrictManagermentClone = () => {
-  const { t } = useI18n("Province");
+export const MstUnitPriceAVN = () => {
+  const { t } = useI18n("MstUnitPriceAVN");
   const api = useClientgateApi();
   const config = useConfiguration();
   let gridRef: any = useRef(null);
   const keyword = useAtomValue(keywordAtom);
-
+  const [dataSearch, setDataSearch] = useState([] as any);
   const showError = useSetAtom(showErrorAtom);
   const setSelectedItems = useSetAtom(selectedItemsAtom);
   const { data, isLoading, refetch } = useQuery(
-    ["provinces", keyword],
+    ["MstUnitPriceAVN", keyword],
     () =>
-      api.Mst_District_Search({
+      api.Mst_Unit_Price_AVN_Search({
         KeyWord: keyword,
         FlagActive: FlagActiveEnum.All,
         Ft_PageIndex: 0,
@@ -49,11 +56,13 @@ export const DistrictManagermentClone = () => {
         debugInfo: data.debugInfo,
         errorInfo: data.errorInfo,
       });
+    } else {
+      setDataSearch(data?.DataList);
     }
   }, [data]);
 
-  const onCreate = async (data: Partial<Province>) => {
-    const resp = await api.Mst_District_Create({
+  const onCreate = async (data: Partial<Mst_Unit_Price_AVN>) => {
+    const resp = await api.Mst_Unit_Price_AVN_Rate_Create({
       ...data,
       FlagActive: !!data.FlagActive ? (data.FlagActive ? "1" : "0") : "0",
     });
@@ -69,8 +78,12 @@ export const DistrictManagermentClone = () => {
     });
     throw new Error(resp.errorCode);
   };
-  const onUpdate = async (key: string, data: Partial<Province>, e: any) => {
-    const resp = await api.Mst_District_Update(key, data);
+  const onUpdate = async (
+    key: string,
+    data: Partial<Mst_Sales_Type>,
+    e: any
+  ) => {
+    const resp = await api.Mst_Unit_Price_AVN_Rate_Update(key, data);
     if (resp.isSuccess) {
       toast.success(t("Update Successfully"));
       await refetch();
@@ -84,7 +97,7 @@ export const DistrictManagermentClone = () => {
     throw new Error(resp.errorCode);
   };
   const onDelete = async (key: string) => {
-    const resp = await api.Mst_District_Delete(key);
+    const resp = await api.Mst_Unit_Price_AVN_Rate_Delete(key);
     if (resp.isSuccess) {
       toast.success(t("Delete Successfully"));
       await refetch();
@@ -120,31 +133,14 @@ export const DistrictManagermentClone = () => {
 
   const columns: ColumnOptions[] = [
     {
-      dataField: "DistrictCode",
-      caption: t("Mã quận/huyện"),
+      dataField: "AVNCode",
+      caption: t("AVNCode"),
       editorType: "dxTextBox",
       visible: true,
       editorOptions: {
         placeholder: t("Input"),
       },
-      validationRules: [
-        {
-          type: "required",
-        },
-        {
-          type: "pattern",
-          pattern: /[a-zA-Z0-9]/,
-        },
-      ],
-    },
-    {
-      dataField: "ProvinceCode",
-      caption: t("Mã tỉnh"),
-      editorType: "dxTextBox",
-      visible: true,
-      editorOptions: {
-        placeholder: t("Input"),
-      },
+
       validationRules: [
         {
           type: "required",
@@ -152,12 +148,25 @@ export const DistrictManagermentClone = () => {
       ],
     },
     {
-      dataField: "DistrictName",
-      caption: t("Tên quận huyện"), // tên validate
-      defaultSortOrder: "asc",
+      dataField: "EffDateTime",
+      caption: t("EffDateTime"),
+      visible: true,
+      editorType: "dxDateBox",
+      format: "yyyy/MM/dd",
+      editorOptions: {
+        placeholder: t("Input"),
+      },
+      validationRules: [
+        {
+          type: "required",
+        },
+      ],
+    },
+    {
+      dataField: "UnitPriceAVN",
+      caption: t("UnitPriceAVN"),
       editorType: "dxTextBox",
       visible: true,
-      allowFiltering: false,
       editorOptions: {
         placeholder: t("Input"),
       },
@@ -190,16 +199,19 @@ export const DistrictManagermentClone = () => {
   };
 
   const handleEditorPreparing = (e: EditorPreparingEvent<any, any>) => {
-    if (e.dataField === "ProvinceCode") {
+    // tạm thời chưa  dùng, để default
+    if (e.dataField === "SalesType") {
       e.editorOptions.readOnly = !e.row?.isNewRow;
     } else if (e.dataField === "FlagActive") {
       e.editorOptions.value = false;
-    } else if (e.dataField === "DistrictCode") {
+    } else if (e.dataField === "SalesGroupType") {
       e.editorOptions.readOnly = !e.row?.isNewRow;
     }
   };
+  // đã chạy
   const handleDeleteRows = async (rows: string[]) => {
-    const resp = await api.Mst_District_Delete_Multiple(rows);
+    // console.log(201, rows);
+    const resp = await api.Mst_Sales_Type_Delete_Multiple(rows);
     if (resp.isSuccess) {
       toast.success(t("Delete Successfully"));
       await refetch();
@@ -233,7 +245,7 @@ export const DistrictManagermentClone = () => {
   };
 
   const handleUploadFile = async (file: File, progressCallback?: Function) => {
-    const resp = await api.Mst_District_Upload(file);
+    const resp = await api.Mst_Sales_Type_Upload(file);
     if (resp.isSuccess) {
       toast.success(t("Upload Successfully"));
       await refetch();
@@ -246,7 +258,7 @@ export const DistrictManagermentClone = () => {
     }
   };
   const handleDownloadTemplate = async () => {
-    const resp = await api.Mst_District_ExportTemplate();
+    const resp = await api.Mst_Sales_Type_ExportTemplate();
     if (resp.isSuccess) {
       toast.success(t("Download Successfully"));
       window.location.href = resp.Data;
@@ -267,7 +279,7 @@ export const DistrictManagermentClone = () => {
         <PageHeaderLayout>
           <PageHeaderLayout.Slot name={"Before"}>
             <div className="font-bold dx-font-m">
-              {t("Clone District Management")}
+              {t("Quản lý bảng giá AVN")}
             </div>
           </PageHeaderLayout.Slot>
           <PageHeaderLayout.Slot name={"Center"}>
@@ -285,7 +297,7 @@ export const DistrictManagermentClone = () => {
           defaultPageSize={config.PAGE_SIZE}
           dataSource={data?.DataList ?? []}
           columns={columns}
-          keyExpr="DistrictCode"
+          keyExpr="AVNCode"
           allowSelection={true}
           allowInlineEdit={true}
           onReady={(ref) => (gridRef = ref)}

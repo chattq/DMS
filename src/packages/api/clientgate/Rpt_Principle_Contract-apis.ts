@@ -18,11 +18,11 @@ export const useRptPrincipleContract = (apiBase: AxiosInstance) => {
         ...params,
       });
     },
-    Rpt_Principle_Contract_GetBySalesType: async (): Promise<
+    Rpt_Principle_Contract_GetAllActive: async (): Promise<
       ApiResponse<Rpt_Principle_Contract>
     > => {
       return await apiBase.post<any, ApiResponse<Rpt_Principle_Contract>>(
-        "/RptPrincipleContract/GetBySalesType"
+        "/RptPrincipleContract/GetAllActive"
       );
     },
     Rpt_Principle_Contract_Create: async (
@@ -36,22 +36,22 @@ export const useRptPrincipleContract = (apiBase: AxiosInstance) => {
       });
     },
 
-    Rpt_Principle_Contract_Delete: async (SalesType: string) => {
+    Rpt_Principle_Contract_Delete: async (DealerCode: string) => {
       return await apiBase.post<
         SearchParam,
         ApiResponse<Rpt_Principle_Contract>
       >("/RptPrincipleContract/Delete", {
-        SalesType: SalesType,
+        DealerCode: DealerCode,
       });
     },
-    Rpt_Principle_Contract_Delete_Multiple: async (SalesType: string[]) => {
+    Rpt_Principle_Contract_Delete_Multiple: async (DealerCode: string[]) => {
       return await apiBase.post<
         SearchParam,
         ApiResponse<Rpt_Principle_Contract>
       >("/RptPrincipleContract/DeleteMultiple", {
         strJson: JSON.stringify(
-          SalesType.map((SalesType) => ({
-            SalesType: SalesType,
+          DealerCode.map((DealerCode) => ({
+            DealerCode: DealerCode,
           }))
         ),
       });
@@ -65,11 +65,7 @@ export const useRptPrincipleContract = (apiBase: AxiosInstance) => {
         ApiResponse<Rpt_Principle_Contract>
       >("/RptPrincipleContract/Update", {
         strJson: JSON.stringify({
-          //   SalesType: key,
-          //   SalesTypeName: port?.SalesTypeName
-          //     ? port?.SalesTypeName
-          //     : data.SalesTypeName,
-          //   SalesTypeNameVN: port?.SalesTypeNameVN,
+          DealerCode: key,
           ...port,
         }),
         ColsUpd: Object.keys(port),
